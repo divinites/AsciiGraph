@@ -1,0 +1,9 @@
+[
+        { "keys": [ "ctrl+shift+g" ], 
+          "command": "ascii_graph_file"
+        },
+        { "keys": [ "ctrl+super+g" ], 
+          "command": "ascii_graph_region",
+        }
+
+]

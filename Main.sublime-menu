@@ -1,0 +1,32 @@
+[
+	{
+		"caption": "Tools",
+		"mnemonic": "T",
+		"id": "tools",
+		"children": [
+			{
+				"caption": "Packages",
+				"mnemonic": "P",
+				"id": "packages",
+				"children": [
+					{
+						"caption": "ASCII Graph",
+						"children": [
+							{
+								"command": "open_file",
+								"args": {"file": "${packages}/Asciigraph/asciigraph.sublime-keymap"},
+								"caption": "Keymap – Default"
+							},
+							{
+								"command": "open_file",
+								"args": {"file": "${packages}/User/asciigraph.sublime-keymap"},
+								"caption": "keymap – User"
+							},
+							{ "caption": "-" }
+						]
+					}
+				]
+			}
+		]
+	}
+]

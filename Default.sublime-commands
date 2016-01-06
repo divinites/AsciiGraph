@@ -1,0 +1,10 @@
+[
+    {
+        "caption": "AsciiGraph: Current File",
+        "command": "ascii_graph_file"
+    },
+    {
+        "caption": "AsciiGraph: Current Selection",
+        "command": "ascii_graph_region"
+    }
+]
