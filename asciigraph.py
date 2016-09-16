@@ -2,9 +2,10 @@ import sublime
 import sublime_plugin
 import os
 import subprocess
-
+from os.path import dirname, realpath
 # Thanks to Pandoc Project, some codes are borrowed there.
 
+isWindows = sublime.platform() == 'windows'
 
 class AsciiGraphRegionCommand(sublime_plugin.WindowCommand):
     def is_enable(self):
@@ -19,7 +20,10 @@ class AsciiGraphRegionCommand(sublime_plugin.WindowCommand):
             selection_text += current_view.substr(region)
         if graph_easy is None:
             return
-        cmd_1 = ["echo", selection_text]
+
+        # Fix echo command extra double quotes on Windows platform
+        echo = dirname(realpath(__file__)) + '/echo.exe' if isWindows else 'echo'
+        cmd_1 = [echo, selection_text]
         cmd_2 = [graph_easy]
         process_1 = subprocess.Popen(cmd_1,
                                      shell=False,
@@ -37,9 +41,12 @@ class AsciiGraphRegionCommand(sublime_plugin.WindowCommand):
                 ' '.join(cmd_2),
                 error.decode('utf-8').strip()]))
             return
+        result_str = result.decode('utf-8')
+        if isWindows:
+            result_str = result_str.replace('\r', '')  # Remove CR
         new_view = self.window.new_file()
         new_view.run_command("insert_snippet", {"contents":
-                                                result.decode('utf-8')})
+                                                result_str})
 
 
 class AsciiGraphFileCommand(sublime_plugin.WindowCommand):
@@ -64,9 +71,12 @@ class AsciiGraphFileCommand(sublime_plugin.WindowCommand):
                 ' '.join(cmd),
                 error.decode('utf-8').strip()]))
             return
+        result_str = result.decode('utf-8')
+        if isWindows:
+            result_str = result_str.replace('\r', '')  # Remove CR
         new_view = self.window.new_file()
         new_view.run_command("insert_snippet", {"contents":
-                                                result.decode('utf-8')})
+                                                result_str})
 
 
 def _find_binary(name, default=None):
@@ -84,7 +94,7 @@ def _find_binary(name, default=None):
         path = os.path.join(dirname, name)
         print(path)
         if os.path.exists(path):
-            return path
+            return path.replace('\\', '/') + '.bat' if isWindows else path
 
     sublime.error_message('Could not find graph-easy executable on PATH.')
     return None
@@ -93,3 +103,4 @@ def _find_binary(name, default=None):
 def _s(key):
     '''Convenience function for getting the setting dict.'''
     return sublime.load_settings("Asciigraph.sublime-settings").get(key)
+
