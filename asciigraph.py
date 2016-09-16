@@ -2,6 +2,7 @@ import sublime
 import sublime_plugin
 import os
 import subprocess
+import locale
 from os.path import dirname, realpath
 # Thanks to Pandoc Project, some codes are borrowed there.
 
@@ -20,6 +21,9 @@ class AsciiGraphRegionCommand(sublime_plugin.WindowCommand):
             selection_text += current_view.substr(region)
         if graph_easy is None:
             return
+
+        if isWindows:
+            selection_text = selection_text.encode('UTF-8').decode(locale.getpreferredencoding())
 
         # Fix echo command extra double quotes on Windows platform
         echo = dirname(realpath(__file__)) + '/echo.exe' if isWindows else 'echo'
